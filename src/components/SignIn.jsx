@@ -3,30 +3,29 @@ import { Alert } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import auth from '../firebase'
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { authActions } from '../store/AuthSlice';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
+import { authActions } from '../store/AuthSlice';
 
-function SignUp() {
+function Signin() {
     const {login}=authActions
     const dispatch=useDispatch()
     const [variant,setVariant]=useState('')
     const passwordRef = useRef(null)
-    const confirmPasswordRef = useRef(null)
+   
     const emailRef = useRef('')
     const submitHandaler = async (e) => {
         e.preventDefault()
         const email = emailRef.current.value
         const password = passwordRef.current.value
-        const confirmPassword = confirmPasswordRef.current.value
+        
         
         try {
-            if (password === confirmPassword) {
-
-                const res=await createUserWithEmailAndPassword(auth, email, password)
+           
+               const res= await signInWithEmailAndPassword(auth, email, password)
                 dispatch(login(res._tokenResponse.idToken))
                 setVariant('primary')
-            }
+            
         } catch (error) {
             console.log(error);
             setVariant('danger')
@@ -39,7 +38,7 @@ function SignUp() {
         {variant&&<Alert key={variant} variant={variant}>
           successFull
         </Alert>}
-        <h3 className='text-center'>Signup</h3>
+        <h3 className='text-center'>Signin</h3>
             <Form onSubmit={submitHandaler} className='w-25 m-auto'>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>
@@ -51,10 +50,7 @@ function SignUp() {
                     <Form.Label>Password</Form.Label>
                     <Form.Control required type="password" placeholder="Password" ref={passwordRef} />
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="confirm-password">
-                    <Form.Label> Confirm Password</Form.Label>
-                    <Form.Control required type="password" placeholder="Confirm Password" ref={confirmPasswordRef} />
-                </Form.Group>
+               
               
                 <Button variant="primary" type="submit">
                     Submit
@@ -65,4 +61,4 @@ function SignUp() {
     );
 }
 
-export default SignUp;
+export default Signin;

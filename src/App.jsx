@@ -1,14 +1,18 @@
 
 
+import { Fragment } from 'react'
 import './App.css'
-import SignUp from './components/Signup'
-
+import Signin from './components/SignIn'
+import { useSelector } from 'react-redux'
+import Home from './components/Home'
 function App() {
 
-
+  const isloggedIn = useSelector(state => state.auth.isloggedIn)
   return (
-   
-    <SignUp/>
+    <Fragment>
+      {isloggedIn && <Home />}
+      {!isloggedIn&&<Signin />}
+    </Fragment> 
   )
 }
 
